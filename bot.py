@@ -9,12 +9,10 @@ import random
 from amazon_api import search_amazon_deals
 from utils import init_db, was_recently_posted, mark_as_posted
 
-init_db()
-application = ApplicationBuilder().token(config.TELEGRAM_BOT_TOKEN).build()
-bot = application.bot
 scheduler = AsyncIOScheduler(timezone=timezone(config.TIMEZONE))
 
-async def post_deal():
+async def post_deal(app):
+    bot = app.bot
     max_attempts = 5
     attempt = 0
     deals = []
@@ -36,12 +34,12 @@ async def post_deal():
     original = deal.get('original_price', 'N/A')
     discounted = deal['price']
     discount = deal['discount']
-
+    
     caption = (
-        f"🔥 <b>{deal['title']}</b>\n"
-        f"\n"
-        f"💰<b>AHORA:{discounted} </b>\n"
-        f"Antes: {original} → (Ahorras {discount}%)\n"
+        f"🔥 <b>{deal['title']}</b>\\n"
+        f"\\n"
+        f"💰<b>AHORA:{discounted} </b>\\n"
+        f"Antes: {original} → (Ahorras {discount}%)\\n"
         f"🔗 <a href='{deal['url']}'>VER OFERTA</a>"
     )
     try:
@@ -57,33 +55,34 @@ async def post_deal():
     except Exception as e:
         print(f"❌ Failed to post to Telegram: {e}")
 
-async def scheduled_job():
+async def scheduled_job(app):
     print("⏰ scheduled_job triggered")
     now = datetime.now(timezone(config.TIMEZONE)).time()
     start_time = datetime.strptime('08:00', '%H:%M').time()
     end_time = datetime.strptime('22:00', '%H:%M').time()
     if start_time <= now <= end_time:
-        await post_deal()
+        await post_deal(app)
     else:
         print("🛑 Outside posting hours.")
 
 async def main():
     print("🚀 Bot starting...")
-    await application.initialize()
-    bot = application.bot  # ✅ move this line here
-    await application.start()
+    init_db()
+    app = ApplicationBuilder().token(config.TELEGRAM_BOT_TOKEN).build()
+    await app.initialize()
+    await app.start()
 
     scheduler.add_job(
         scheduled_job,
         trigger='interval',
         minutes=5,
-        next_run_time=datetime.now(timezone(config.TIMEZONE))
+        next_run_time=datetime.now(timezone(config.TIMEZONE)),
+        args=[app]
     )
     scheduler.start()
 
     print("✅ Scheduler started and bot is running.")
     await asyncio.Event().wait()
-
 
 if __name__ == '__main__':
     asyncio.run(main())
