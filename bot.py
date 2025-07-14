@@ -68,8 +68,9 @@ async def scheduled_job():
         print("🛑 Outside posting hours.")
 
 async def main():
-    print("Bot starting...")
+    print("🚀 Bot starting...")
     await application.initialize()
+    bot = application.bot  # ✅ move this line here
     await application.start()
 
     scheduler.add_job(
@@ -82,6 +83,7 @@ async def main():
 
     print("✅ Scheduler started and bot is running.")
     await asyncio.Event().wait()
+
 
 if __name__ == '__main__':
     asyncio.run(main())
