@@ -7,7 +7,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import config
 import random
 from amazon_api import search_amazon_deals
-from utils import init_db, was_posted_recently, mark_as_posted
+from utils import init_db, was_recently_posted, mark_as_posted
 
 init_db()
 application = ApplicationBuilder().token(config.TELEGRAM_BOT_TOKEN).build()
