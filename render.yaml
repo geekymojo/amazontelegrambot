@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: amazon-telegram-bot
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    autoDeploy: true
+    healthCheckPath: ""  # disables health check
