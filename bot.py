@@ -30,18 +30,18 @@ async def post_deal(app):
         print("❌ No deals found after multiple attempts.")
         return
 
-    deal = random.choice(deals)
-    original = deal.get('original_price', 'N/A')
-    discounted = deal['price']
-    discount = deal['discount']
+        deal = random.choice(deals)
+        original = deal.get('original_price', 'N/A')
+        discounted = deal['price']
+        discount = deal['discount']
     
-    caption = (
-        f"🔥 <b>{deal['title']}</b>\\n"
-        f"\\n"
-        f"💰<b>AHORA:{discounted} </b>\\n"
-        f"Antes: {original} → (Ahorras {discount}%)\\n"
-        f"🔗 <a href='{deal['url']}'>VER OFERTA</a>"
-    )
+        caption = (
+            f"🔥 <b>{deal['title']}</b>\n"
+            f"\n"
+            f"💰<b>AHORA:{discounted} </b>\n"
+            f"Antes: {original} → (Ahorras {discount}%)\n"
+            f"🔗 <a href='{deal['url']}'>VER OFERTA</a>"
+            )
     try:
         await bot.send_photo(
             chat_id=config.TELEGRAM_CHANNEL_ID,
