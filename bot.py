@@ -36,10 +36,11 @@ async def post_deal(app):
         discount = deal['discount']
     
         caption = (
-            f"🔥 <b>{deal['title']}</b>\n"
-            f"\n"
-            f"💰<b>AHORA:{discounted} </b>\n"
-            f"Antes: {original} → (Ahorras {discount}%)\n"
+            parse_mode="HTML"
+            f"🔥 <b>{deal['title']}</b><br>"
+            f"<br>"
+            f"💰<b>AHORA:{discounted} </b><br>"
+            f"Antes: {original} → (Ahorras {discount}%)<br>"
             f"🔗 <a href='{deal['url']}'>VER OFERTA</a>"
             )
     try:
