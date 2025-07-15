@@ -36,7 +36,6 @@ async def post_deal(app):
         discount = deal['discount']
     
         caption = (
-            parse_mode="HTML"
             f"🔥 <b>{deal['title']}</b><br>"
             f"<br>"
             f"💰<b>AHORA:{discounted} </b><br>"
