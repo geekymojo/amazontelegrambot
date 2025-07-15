@@ -1,42 +1,31 @@
-import psycopg2
+import sqlite3
 import os
-from datetime import datetime, timedelta
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DB_FILE = "posted_deals.db"
 
 def init_db():
-    conn = psycopg2.connect(DATABASE_URL)
-    cur = conn.cursor()
-    cur.execute("""
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS posted_deals (
             asin TEXT PRIMARY KEY,
-            posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
-    """)
+    ''')
     conn.commit()
-    cur.close()
     conn.close()
 
-def was_recently_posted(asin, hours=24):
-    conn = psycopg2.connect(DATABASE_URL)
-    cur = conn.cursor()
-    cur.execute("SELECT posted_at FROM posted_deals WHERE asin = %s", (asin,))
-    result = cur.fetchone()
-    cur.close()
+def is_posted_recently(asin):
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute('SELECT asin FROM posted_deals WHERE asin = ?', (asin,))
+    result = cursor.fetchone()
     conn.close()
+    return result is not None
 
-    if result:
-        posted_at = result[0]
-        return datetime.utcnow() - posted_at < timedelta(hours=hours)
-    return False
-
-def mark_as_posted(asin):
-    conn = psycopg2.connect(DATABASE_URL)
-    cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO posted_deals (asin, posted_at) VALUES (%s, %s) ON CONFLICT (asin) DO UPDATE SET posted_at = EXCLUDED.posted_at",
-        (asin, datetime.utcnow())
-    )
+def save_posted(asin):
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute('INSERT OR IGNORE INTO posted_deals (asin) VALUES (?)', (asin,))
     conn.commit()
-    cur.close()
     conn.close()
