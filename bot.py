@@ -66,7 +66,7 @@ async def scheduled_job():
     print("⏰ scheduled_job triggered")
     now = datetime.now(timezone(config.TIMEZONE)).time()
     start_time = datetime.strptime('08:00', '%H:%M').time()
-    end_time = datetime.strptime('22:00', '%H:%M').time()
+    end_time = datetime.strptime('23:00', '%H:%M').time()
     if start_time <= now <= end_time:
         await post_deal()
     else:
