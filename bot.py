@@ -21,18 +21,23 @@ async def post_deal():
 
     while not deals and attempt < max_attempts:
         keyword = random.choice(config.SEARCH_KEYWORDS)
-        print(f"🎯 Attempt {attempt+1}: Searching keyword '{keyword}'")
-        deals = search_amazon_deals(
+        print(f"🎯 Attempt {attempt + 1}: Searching keyword '{keyword}'")
+        results = search_amazon_deals(
             keywords=keyword,
             min_discount=config.MINIMUM_DISCOUNT
         )
+
+        # ✅ Filter out deals already posted in the last 24h
+        deals = [deal for deal in results if not is_posted_recently(deal['asin'])]
         attempt += 1
 
     if not deals:
-        print("❌ No deals found after multiple attempts.")
+        print("❌ No new deals found after multiple attempts.")
         return
 
     deal = random.choice(deals)
+
+    # build and send the post, then call save_posted(deal['asin'])
     original = deal.get('original_price', 'N/A')
     discounted = deal['price']
     discount = deal['discount']
