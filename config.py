@@ -8,6 +8,6 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
 
 MINIMUM_DISCOUNT = int(os.getenv("MINIMUM_DISCOUNT", 15))
-SEARCH_KEYWORDS = os.getenv("SEARCH_KEYWORDS", "Electronics,Books,Video Games,Computers,Home And Kitchen,Baby Clothes,Watches,Health,Arts And Crafts,smart home,gadgets,gaming,gaming consoles,playstation game,xbox game,nintendo switch game").split(",")
+SEARCH_KEYWORDS = os.getenv("SEARCH_KEYWORDS", "Electronics,Books,Video Games,Computers,laptop,smart bulb,speakers,fast charger,USB C,wireless charger,usb hub,docking station,power bank,rgb light,lightstrip,light rope,decor,Kitchen,Baby Clothes,Watches,Health,Crafts,smart home,gadgets,gaming,gaming consoles,playstation,xbox,nintendo switch").split(",")
 
 TIMEZONE = os.getenv("TIMEZONE", "America/Santo_Domingo")
