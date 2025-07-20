@@ -80,7 +80,7 @@ async def main():
     scheduler.add_job(
         scheduled_job,
         trigger='interval',
-        minutes=5,
+        minutes=2,
         next_run_time=datetime.now(timezone(config.TIMEZONE))
     )
     scheduler.start()
